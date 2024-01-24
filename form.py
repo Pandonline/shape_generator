@@ -1,9 +1,9 @@
 import math
 
-def defineTab(L,l):
+def defineTab(L,l,c='.'):
     if(L == 0) :
         return [[]]
-    tab = [['.' for j in range(L)] for i in range(l)]
+    tab = [[c for j in range(L)] for i in range(l)]
     return tab
 
 def circle(r):
@@ -33,3 +33,13 @@ def disk(r):
             if abs((x-r)**2 + (y-r)**2) < r**2-EPSILON:
                 tab[y][x] = '*'
     return tab
+
+def square(l):
+    return defineTab(l,l,"#")
+
+def rect(L,l):
+    return defineTab(L,l,"#")
+
+def pp(tab):
+    for line in tab:
+        print(' '.join(line))
