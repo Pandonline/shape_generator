@@ -71,10 +71,20 @@ Lb.select_set(0)
 Lb.bind('<<ListboxSelect>>',ModeSelect)
 Lb.grid()
 
+# CANVAS
 
-# ALTERNATIVE FRAMES FOR SIZE
 def clearCanvas():
     c.delete("all")
+
+def drawForm(TAB):
+    s = (int(c.cget("width"))-10)/max(len(TAB),len(TAB[0]))
+    for i in range(len(TAB)):
+        for j in range(len(TAB[0])):
+            match(TAB[i][j]):
+                case '*' :
+                    c.create_rectangle(5+i*s,5+j*s,5+(i+1)*s,5+(j+1)*s,fill="#333")
+                case _ : 
+                    c.create_rectangle(5+i*s,5+j*s,5+(i+1)*s,5+(j+1)*s)
 
 def Generate() :
     clearCanvas()
@@ -89,6 +99,9 @@ def Generate() :
         case 'Rectangle':
             TAB = form.rect(spinvar_1.get(),spinvar_2.get())
     drawForm(TAB)
+
+# ALTERNATIVE FRAMES FOR SIZE
+    
 alt_frame = Frame(menu)
 spinvar_1 = IntVar()
 spinvar_2 = IntVar()
@@ -123,20 +136,8 @@ def build_alt_frame(evt):
     alt_refresh.grid()
     alt_frame.grid()
 build_alt_frame(None)
+Generate()
 alt_frame.grid()
-
-#CANVAS
-
-
-def drawForm(TAB):
-    s = (int(c.cget("width"))-10)/max(len(TAB),len(TAB[0]))
-    for i in range(len(TAB)):
-        for j in range(len(TAB[0])):
-            match(TAB[i][j]):
-                case '*' :
-                    c.create_rectangle(5+i*s,5+j*s,5+(i+1)*s,5+(j+1)*s,fill="#333")
-                case _ : 
-                    c.create_rectangle(5+i*s,5+j*s,5+(i+1)*s,5+(j+1)*s)
 
 #COLOR PICKER
 cframe = Frame(menu,pady=15)
@@ -148,10 +149,12 @@ def choose_color():
     return color_code
 def add_color_line():
     csize.set(min(5,csize.get()+1))
-    LIST_COLOR_PICKER[csize.get()-1].grid(sticky="W") 
+    LIST_COLOR_PICKER[csize.get()-1].grid(sticky="W")
+    get_list_valeur_color_scroll()
 def dec_color_line():
     LIST_COLOR_PICKER[csize.get()-1].grid_forget()
     csize.set(max(0,csize.get()-1))
+    get_list_valeur_color_scroll()
 
 cAddDecFrame = Frame(cframe,padx=2,pady=2)
 add_button = Button(cAddDecFrame, text="+", command=add_color_line)
@@ -168,12 +171,21 @@ def color_changer(var):
 cligne = Frame(cListFrame,pady=2)
 LIST_COLOR = [ StringVar(cframe) for i in range(5) ]
 for c_iter in LIST_COLOR : 
-    c_iter.set("#333")
-
+    c_iter.set("#030303")
 cligne_button = Button(cligne,text="c")
 cligne_label = Label(cligne)
+
+# Randomizer
+def get_list_valeur_color_scroll(evt=None):
+    li = []
+    for i in range(csize.get()):
+        li.append([LIST_COLOR[i].get(),LIST_COLOR_PICKER[i].winfo_children()[2].get()])
+get_list_valeur_color_scroll()
+
+cslide = Scale(cligne,from_=1,to=99,orient="horizontal",command=get_list_valeur_color_scroll)
 cligne_button.grid()
 cligne_label.grid(row=0,column=1)
+cslide.grid(row=0,column=2)
 LIST_COLOR_PICKER = [clone_widget(cligne) for i in range(5)]
 def refresh_list() :
     LIST_COLOR_PICKER[0].winfo_children()[0].configure(command=lambda:color_changer(0),background=LIST_COLOR[0].get())
@@ -186,13 +198,12 @@ def refresh_list() :
     LIST_COLOR_PICKER[3].winfo_children()[1].configure(text=LIST_COLOR[3].get())
     LIST_COLOR_PICKER[4].winfo_children()[0].configure(command=lambda:color_changer(4),background=LIST_COLOR[4].get())
     LIST_COLOR_PICKER[4].winfo_children()[1].configure(text=LIST_COLOR[4].get())
+    get_list_valeur_color_scroll()
 refresh_list()
 cListFrame.grid(sticky="W")
 cframe.grid()
+
 # END OF WINDOW
 menu.grid(row=0,column=1,sticky="N")
 w.grid()
 m.mainloop()
-
-
-
