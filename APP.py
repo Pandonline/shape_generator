@@ -123,7 +123,8 @@ def add_color_line():
     LIST_COLOR_PICKER[csize.get()-1].grid(sticky="W")
     get_list_valeur_color_scroll()
 def dec_color_line():
-    LIST_COLOR_PICKER[csize.get()-1].grid_forget()
+    if(csize.get()>1):
+        LIST_COLOR_PICKER[csize.get()-1].grid_forget()
     csize.set(max(1,csize.get()-1))
     get_list_valeur_color_scroll()
 
@@ -206,8 +207,49 @@ def Generate() :
         case 'Rectangle':
             TAB = form.rect(spinvar_1.get(),spinvar_2.get())
     TAB = Randomizer.rand_form(TAB,get_list_valeur_color_scroll())
-    form.pp(TAB)
+    # form.pp(TAB)
     drawForm(TAB)
+    generateCountFrame(TAB)
+    
+# COUNT BLOCK
+
+countFrame = Frame(m)
+
+
+countSubLigneFrame = Frame(countFrame)
+countSubCanva = Canvas(countSubLigneFrame,width=10,height=10)
+countSubCanva.grid(row=0,column=0)
+countSubLabel = Label(countSubLigneFrame,text="color number : nb iter")
+countSubLabel.grid(row=0,column=1)
+
+
+def forgetCount(size):
+    for i in range(size):
+        LIST_COUNT_OBJ.pop().grid_forget()
+def revealCount():
+    for i in LIST_COUNT_OBJ:
+        i.grid(sticky='W')
+        
+def generateCountFrame(TAB):
+    countDico = {}
+    for i in range(len(TAB)):
+        for j in range(len(TAB[0])):
+            if TAB[i][j] in countDico:
+                countDico[TAB[i][j]] = countDico.get(TAB[i][j]) + 1
+            else :
+                countDico[TAB[i][j]] = 1
+    if('.' in countDico.keys()):
+        countDico.pop('.')
+    forgetCount(len(LIST_COUNT_OBJ))
+    for i in range(len(countDico.keys())):
+        LIST_COUNT_OBJ.append(clone_widget(countSubLigneFrame))
+    i=0
+    for item in sorted(countDico.items(), key=lambda x:x[1],reverse=True):
+        LIST_COUNT_OBJ[i].winfo_children()[0].configure(background=item[0])
+        LIST_COUNT_OBJ[i].winfo_children()[1].configure(text=item[0]+" : "+str(item[1]))
+        i+=1
+    revealCount()
+LIST_COUNT_OBJ = [clone_widget(countSubLigneFrame)]
 # END OF WINDOW
 Generate()
 build_alt_frame(None)
@@ -215,4 +257,5 @@ alt_frame.grid()
 menu.grid(row=0,column=1,sticky="N")
 cframe.grid()
 w.grid()
+countFrame.grid(sticky='W')
 m.mainloop()
