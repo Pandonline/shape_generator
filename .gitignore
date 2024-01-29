@@ -2,3 +2,4 @@
 build/
 dist/
 APP.spec
+*.pyc
