@@ -46,7 +46,7 @@ def clone_widget(widget, master=None):
 
     return cloned
 
-LIST_MODE = ['Square','Rectangle','Circle','Disk']
+LIST_MODE = ['Square','Rectangle','Circle','Disk','Ring']
 # MAIN FRAME
 m=Tk()
 m.title("Shape Generator :D")
@@ -103,6 +103,13 @@ def build_alt_frame(evt):
             alt_label_1.grid()
             alt_box_1.grid()
             alt_label_2.config(text="Rectangle length :")
+            alt_label_2.grid()
+            alt_box_2.grid()
+        case 'Ring':
+            alt_label_1.config(text="Outer Ray :")
+            alt_label_1.grid()
+            alt_box_1.grid()
+            alt_label_2.config(text="Inner Ray :")
             alt_label_2.grid()
             alt_box_2.grid()
     alt_refresh = Button(alt_frame,text="generate",command=Generate)
@@ -206,6 +213,8 @@ def Generate() :
             TAB = form.square(spinvar_1.get())
         case 'Rectangle':
             TAB = form.rect(spinvar_1.get(),spinvar_2.get())
+        case 'Ring':
+            TAB = form.ring(spinvar_1.get(),spinvar_2.get())
     TAB = Randomizer.rand_form(TAB,get_list_valeur_color_scroll())
     # form.pp(TAB)
     drawForm(TAB)

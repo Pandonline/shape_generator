@@ -28,6 +28,17 @@ def disk(r):
                 tab[y][x] = '*'
     return tab
 
+def ring(r1,r2):
+    width, height = 2*r1+1,2*r1+1
+    tab = defineTab(width,height)
+    # draw the circle
+    for y in range(height):
+        for x in range(width):
+            # see if we're close to (x-a)**2 + (y-b)**2 == r**2
+            if abs((x-r1)**2 + (y-r1)**2) < (r1+0.5)**2 and abs((x-r1)**2 + (y-r1)**2) > (r2+0.5)**2:
+                tab[y][x] = '*'
+    return tab
+
 def square(l):
     return defineTab(l,l,"*")
 
